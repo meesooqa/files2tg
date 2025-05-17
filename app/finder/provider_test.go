@@ -46,7 +46,7 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 		}
 
 		p := NewProvider()
-		chunks, err := p.ListFilesSortedAndChunked(fsys, ".", 10)
+		chunks, err := p.listFilesSortedAndChunked(fsys, "", ".", 10)
 		require.NoError(t, err)
 		require.Len(t, chunks, 1)
 		require.Len(t, chunks[0], 3)
@@ -67,7 +67,7 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 		}
 
 		p := NewProvider()
-		chunks, err := p.ListFilesSortedAndChunked(fsMap, ".", 7)
+		chunks, err := p.listFilesSortedAndChunked(fsMap, "", ".", 7)
 		require.NoError(t, err)
 		assert.Len(t, chunks, 2)
 		assert.Len(t, chunks[0], 7)
@@ -77,7 +77,7 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 	t.Run("invalid directory", func(t *testing.T) {
 		fsys := fstest.MapFS{}
 		p := NewProvider()
-		chunks, err := p.ListFilesSortedAndChunked(fsys, "nonexistent", 5)
+		chunks, err := p.listFilesSortedAndChunked(fsys, "", "nonexistent", 5)
 		assert.Error(t, err)
 		assert.Nil(t, chunks)
 	})
