@@ -14,6 +14,7 @@ type File struct {
 	Path    string
 	Name    string
 	ModTime time.Time
+	Info    VideoInfo
 }
 
 type Provider struct{}
