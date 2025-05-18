@@ -1,0 +1,23 @@
+volumes:
+  server-data:
+    driver: local
+
+services:
+  # This service could be accessed by port 8081 as local Telegram Bot API server.
+  telegram-bot-api:
+    image: ghcr.io/bots-house/docker-telegram-bot-api:latest
+    container_name: files2tg_bot
+    hostname: telegram-bot-api
+    command: "--dir=/var/lib/telegram-bot-api"
+    volumes:
+      - server-data:/var/lib/telegram-bot-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8081:8081"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
