@@ -14,13 +14,17 @@ type File struct {
 	Path    string
 	Name    string
 	ModTime time.Time
-	Info    VideoInfo
+	Info    *VideoInfo
 }
 
-type Provider struct{}
+type Provider struct {
+	VideoInfoProvider VIProvider
+}
 
-func NewProvider() *Provider {
-	return &Provider{}
+func NewProvider(VideoInfoProvider VIProvider) *Provider {
+	return &Provider{
+		VideoInfoProvider: VideoInfoProvider,
+	}
 }
 
 // GetListFilesSortedAndChunked returns a list of files in a directory
@@ -46,10 +50,17 @@ func (o *Provider) listFilesSortedAndChunked(fsys fs.FS, root, dir string, chunk
 		if err != nil {
 			return nil, fmt.Errorf("failed to get info for %s: %w", entry.Name(), err)
 		}
+		path := filepath.Join(root, dir, entry.Name())
+		videoInfo, err := o.VideoInfoProvider.GetVideoInfo(path)
+		if err != nil {
+			//return nil, fmt.Errorf("failed to get videoInfo for %s: %w", entry.Name(), err)
+			return nil, fmt.Errorf("failed to get videoInfo for %s: %w", path, err)
+		}
 		files = append(files, File{
 			Name:    entry.Name(),
 			ModTime: info.ModTime(),
-			Path:    filepath.Join(root, dir, entry.Name()),
+			Path:    path,
+			Info:    videoInfo,
 		})
 	}
 	sort.Slice(files, func(i, j int) bool {

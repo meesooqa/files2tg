@@ -45,7 +45,8 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 			"dir1/subfile.txt": {Data: []byte("content"), ModTime: modTime(2020)},
 		}
 
-		p := NewProvider()
+		testVIP := NewTestVideoInfoProvider()
+		p := NewProvider(testVIP)
 		chunks, err := p.listFilesSortedAndChunked(fsys, "", ".", 10)
 		require.NoError(t, err)
 		require.Len(t, chunks, 1)
@@ -66,7 +67,8 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 			}
 		}
 
-		p := NewProvider()
+		testVIP := NewTestVideoInfoProvider()
+		p := NewProvider(testVIP)
 		chunks, err := p.listFilesSortedAndChunked(fsMap, "", ".", 7)
 		require.NoError(t, err)
 		assert.Len(t, chunks, 2)
@@ -76,7 +78,8 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 
 	t.Run("invalid directory", func(t *testing.T) {
 		fsys := fstest.MapFS{}
-		p := NewProvider()
+		testVIP := NewTestVideoInfoProvider()
+		p := NewProvider(testVIP)
 		chunks, err := p.listFilesSortedAndChunked(fsys, "", "nonexistent", 5)
 		assert.Error(t, err)
 		assert.Nil(t, chunks)

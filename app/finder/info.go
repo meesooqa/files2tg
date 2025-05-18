@@ -8,6 +8,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+type VIProvider interface {
+	GetVideoInfo(path string) (*VideoInfo, error)
+}
+
 type FFProbe struct {
 	Streams []VideoInfo `json:"streams"`
 }
@@ -23,7 +27,13 @@ type VideoInfo struct {
 	Duration int
 }
 
-func NewVideoInfoFromFilepath(path string) (*VideoInfo, error) {
+type VideoInfoProvider struct{}
+
+func NewVideoInfoProvider() *VideoInfoProvider {
+	return &VideoInfoProvider{}
+}
+
+func (o *VideoInfoProvider) GetVideoInfo(path string) (*VideoInfo, error) {
 	cmd := exec.Command("ffprobe",
 		"-v", "error",
 		"-select_streams", "v:0",
