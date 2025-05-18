@@ -1,0 +1,26 @@
+<html class="page" lang="en">
+<head>
+    <title>Video to Telegram</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body class="page__body">
+    <main class="main">
+        <h1 class="main__title">Task List</h1>
+        <form class="form" action="/send" method="post">
+            <button type="submit">Run</button>
+        </form>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="jobsBody"></tbody>
+        </table>
+    </main>
+</body>
+<script type="module" src="/static/scripts/index.js"></script>
+</html>
