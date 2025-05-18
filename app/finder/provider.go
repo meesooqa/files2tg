@@ -53,8 +53,8 @@ func (o *Provider) listFilesSorted(fsys fs.FS, root, dir string) ([]File, error)
 		path := filepath.Join(root, dir, entry.Name())
 		videoInfo, err := o.VideoInfoProvider.GetVideoInfo(path)
 		if err != nil {
-			//return nil, fmt.Errorf("failed to get videoInfo for %s: %w", entry.Name(), err)
-			return nil, fmt.Errorf("failed to get videoInfo for %s: %w", path, err)
+			continue
+			// return nil, fmt.Errorf("failed to get videoInfo for %s: %w", path, err)
 		}
 		files = append(files, File{
 			Name:    entry.Name(),
