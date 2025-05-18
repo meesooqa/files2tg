@@ -37,7 +37,7 @@ func (o *VideoInfoProvider) GetVideoInfo(path string) (*VideoInfo, error) {
 	cmd := exec.Command("ffprobe",
 		"-v", "error",
 		"-select_streams", "v:0",
-		"-show_entries", "stream=width,height,duration",
+		"-show_entries", "stream=codec_type,width,height,duration",
 		"-of", "json", path)
 	out, err := cmd.Output()
 	if err != nil {

@@ -1,7 +1,6 @@
 package finder
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
 	"testing"
@@ -31,7 +30,7 @@ func TestVirtualFSWithDir(t *testing.T) {
 	assert.True(t, info.IsDir())
 }
 
-func TestListFilesSortedAndChunked(t *testing.T) {
+func TestListFilesSorted(t *testing.T) {
 	t.Run("sorted and filtered virtual files", func(t *testing.T) {
 		modTime := func(year int) time.Time {
 			return time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -47,41 +46,22 @@ func TestListFilesSortedAndChunked(t *testing.T) {
 
 		testVIP := NewTestVideoInfoProvider()
 		p := NewProvider(testVIP)
-		chunks, err := p.listFilesSortedAndChunked(fsys, "", ".", 10)
+		files, err := p.listFilesSorted(fsys, "", ".")
 		require.NoError(t, err)
-		require.Len(t, chunks, 1)
-		require.Len(t, chunks[0], 3)
+		require.Len(t, files, 3)
 
 		expectedOrder := []string{"file2.txt", "file1.txt", "file3.txt"}
 		for i, name := range expectedOrder {
-			assert.Equal(t, name, chunks[0][i].Name)
+			assert.Equal(t, name, files[i].Name)
 		}
-	})
-
-	t.Run("chunking with more than chunkSize virtual files", func(t *testing.T) {
-		fsMap := make(fstest.MapFS)
-		for i := 1; i <= 10; i++ {
-			fsMap[fmt.Sprintf("file%d.txt", i)] = &fstest.MapFile{
-				Data:    []byte("content"),
-				ModTime: time.Date(2023, 1, int(time.Month(i)), 0, 0, 0, 0, time.UTC),
-			}
-		}
-
-		testVIP := NewTestVideoInfoProvider()
-		p := NewProvider(testVIP)
-		chunks, err := p.listFilesSortedAndChunked(fsMap, "", ".", 7)
-		require.NoError(t, err)
-		assert.Len(t, chunks, 2)
-		assert.Len(t, chunks[0], 7)
-		assert.Len(t, chunks[1], 3)
 	})
 
 	t.Run("invalid directory", func(t *testing.T) {
 		fsys := fstest.MapFS{}
 		testVIP := NewTestVideoInfoProvider()
 		p := NewProvider(testVIP)
-		chunks, err := p.listFilesSortedAndChunked(fsys, "", "nonexistent", 5)
+		files, err := p.listFilesSorted(fsys, "", "nonexistent")
 		assert.Error(t, err)
-		assert.Nil(t, chunks)
+		assert.Nil(t, files)
 	})
 }

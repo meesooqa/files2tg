@@ -27,15 +27,15 @@ func NewProvider(VideoInfoProvider VIProvider) *Provider {
 	}
 }
 
-// GetListFilesSortedAndChunked returns a list of files in a directory
-// sorted by modification time and split into chunks
-func (o *Provider) GetListFilesSortedAndChunked(root, dir string, chunkSize int) ([][]File, error) {
-	return o.listFilesSortedAndChunked(os.DirFS(root), root, dir, chunkSize)
+// GetListFilesSorted returns a list of files in a directory
+// sorted by modification time
+func (o *Provider) GetListFilesSorted(root, dir string) ([]File, error) {
+	return o.listFilesSorted(os.DirFS(root), root, dir)
 }
 
-// ListFilesSortedAndChunked returns a list of files in a directory
-// sorted by modification time and split into chunks
-func (o *Provider) listFilesSortedAndChunked(fsys fs.FS, root, dir string, chunkSize int) ([][]File, error) {
+// ListFilesSorted returns a list of files in a directory
+// sorted by modification time
+func (o *Provider) listFilesSorted(fsys fs.FS, root, dir string) ([]File, error) {
 	entries, err := fs.ReadDir(fsys, dir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read directory: %w", err)
@@ -66,17 +66,5 @@ func (o *Provider) listFilesSortedAndChunked(fsys fs.FS, root, dir string, chunk
 	sort.Slice(files, func(i, j int) bool {
 		return files[i].ModTime.Before(files[j].ModTime)
 	})
-	return o.chunk(files, chunkSize), nil
-}
-
-func (o *Provider) chunk(files []File, chunkSize int) [][]File {
-	var chunks [][]File
-	for i := 0; i < len(files); i += chunkSize {
-		end := i + chunkSize
-		if end > len(files) {
-			end = len(files)
-		}
-		chunks = append(chunks, files[i:end])
-	}
-	return chunks
+	return files, nil
 }
