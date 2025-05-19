@@ -134,7 +134,7 @@ func (o TelegramClient) sendText(channelID string, file finder.File) (*tb.Messag
 }
 
 func (o TelegramClient) sendVideo(channelID string, file finder.File) (*tb.Message, error) {
-	defer os.Remove(file.Path)
+	// TODO defer os.Remove(file.Path)
 
 	attachment := tb.Video{
 		File:     tb.FromDisk(file.Path),
