@@ -8,5 +8,6 @@
 4. `docker compose build`
 5. `docker compose up`
 6. Add files `var/files/*.mp4`
-7. Run `go run ./app/main.go`
-8. Open https://localhost:8080
+7. Customize `app/send/format.go`
+8. Run `go run ./app/main.go`
+9. Open https://localhost:8080
