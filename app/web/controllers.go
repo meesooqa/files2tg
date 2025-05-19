@@ -43,6 +43,7 @@ func (s *Server) addJobsChunk() {
 		fmt.Printf("GetListFilesSorted: %v\n", err)
 		return
 	}
+	// TODO clear queue
 	for _, file := range files {
 		// fmt.Printf("  %s — %s\n", file.Name, file.ModTime.Format(time.RFC3339))
 		// jobId := uuid.New().String()
