@@ -142,7 +142,8 @@ func (o TelegramClient) sendVideo(channelID string, file finder.File) (*tb.Messa
 		Height:   file.Info.Height,
 		Duration: file.Info.Duration,
 
-		Caption: o.getMessageHTML(file),
+		Streaming: true,
+		Caption:   o.getMessageHTML(file),
 	}
 	return o.TelegramSender.Send(attachment, o.Bot, recipient{chatID: channelID}, &tb.SendOptions{ParseMode: tb.ModeHTML})
 }
