@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	tb "gopkg.in/tucnak/telebot.v2"
+	tb "gopkg.in/telebot.v4"
 
 	"github.com/meesooqa/files2tg/app/finder"
 )

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	tb "gopkg.in/tucnak/telebot.v2"
+	tb "gopkg.in/telebot.v4"
 
 	"github.com/meesooqa/files2tg/app/finder"
 )
