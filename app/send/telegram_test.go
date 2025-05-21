@@ -32,10 +32,12 @@ func TestSend_SuccessVideo(t *testing.T) {
 	file := finder.File{
 		Name: "vid.mp4",
 		Path: "/tmp/vid.mp4",
-		Info: finder.VideoInfo{
-			Width:    640,
-			Height:   480,
-			Duration: 7,
+		Info: &finder.VideoInfo{
+			Width:       640,
+			Height:      480,
+			Duration:    7,
+			DurationRaw: "7.5",
+			CodecType:   "video",
 		},
 	}
 
