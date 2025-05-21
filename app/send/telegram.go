@@ -38,6 +38,7 @@ func (f *EnvClientFactory) NewClient() (Client, error) {
 // TelegramSender is the interface for sending messages to telegram
 type TelegramSender interface {
 	Send(tb.Video, *tb.Bot, tb.Recipient, *tb.SendOptions) (*tb.Message, error)
+	SendPaid(tb.Video, *tb.Bot, tb.Recipient, *tb.SendOptions) (*tb.Message, error)
 }
 
 type TelegramClient struct {
@@ -145,7 +146,7 @@ func (o TelegramClient) sendVideo(channelID string, file finder.File) (*tb.Messa
 		Streaming: true,
 		Caption:   o.getMessageHTML(file),
 	}
-	return o.TelegramSender.Send(attachment, o.Bot, recipient{chatID: channelID}, &tb.SendOptions{ParseMode: tb.ModeHTML})
+	return o.TelegramSender.SendPaid(attachment, o.Bot, recipient{chatID: channelID}, &tb.SendOptions{ParseMode: tb.ModeHTML})
 }
 
 // getMessageHTML generates HTML message from provided media.Info
@@ -171,4 +172,10 @@ type TelegramSenderImpl struct{}
 // Send sends a message to Telegram
 func (tg *TelegramSenderImpl) Send(attachment tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
 	return attachment.Send(bot, rcp, opts)
+}
+
+// SendPaid sends a paid message to Telegram
+func (tg *TelegramSenderImpl) SendPaid(attachment tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
+	// TODO stars 1000
+	return bot.SendPaid(rcp, 1000, tb.PaidAlbum{&attachment}, opts)
 }

@@ -12,11 +12,18 @@ import (
 
 // mockSender implements TelegramSender и просто запоминает, что ему прислали
 type mockSender struct {
-	VideoSent *tb.Video
+	VideoSent     *tb.Video
+	PaidAlbumSent *tb.PaidAlbum
 }
 
 func (m *mockSender) Send(v tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
 	m.VideoSent = &v
+	return &tb.Message{Text: "ok"}, nil
+}
+
+func (m *mockSender) SendPaid(v tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
+	m.VideoSent = &v
+	m.PaidAlbumSent = &tb.PaidAlbum{&v}
 	return &tb.Message{Text: "ok"}, nil
 }
 
