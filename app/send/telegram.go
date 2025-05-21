@@ -176,6 +176,6 @@ func (tg *TelegramSenderImpl) Send(attachment tb.Video, bot *tb.Bot, rcp tb.Reci
 
 // SendPaid sends a paid message to Telegram
 func (tg *TelegramSenderImpl) SendPaid(attachment tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
-	// TODO stars 1000
-	return bot.SendPaid(rcp, 1000, tb.PaidAlbum{&attachment}, opts)
+	// TODO stars 100
+	return bot.SendPaid(rcp, 100, tb.PaidAlbum{&attachment}, opts)
 }
