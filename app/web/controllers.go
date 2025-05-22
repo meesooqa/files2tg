@@ -50,8 +50,8 @@ func (s *Server) addJobsChunk() {
 		// jobId := uuid.New().String()
 		jobId := fmt.Sprintf("%s-%s", file.Name, file.ModTime.Format(time.RFC3339))
 
-		// TODO stars 100
-		stars := 100
+		// TODO stars 10
+		stars := 10
 		if i%10 == 0 {
 			stars = 0
 		}
