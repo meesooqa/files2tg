@@ -47,6 +47,7 @@ func (j BaseJob) GetStatus() JobStatus {
 type JobQueuer interface {
 	AddJob(job Job)
 	GetJobsStatuses() map[string]JobStatus
+	Clear()
 }
 
 // JobQueue stores a queue of jobs and their statuses
@@ -86,6 +87,24 @@ func (jq *JobQueue) GetJobsStatuses() map[string]JobStatus {
 		list[id] = status
 	}
 	return list
+}
+
+// Clear removes all pending jobs and resets statuses
+func (jq *JobQueue) Clear() {
+	// Lock to clear the map and drain the queue
+	jq.mu.Lock()
+	jq.jobs = make(map[string]JobStatus)
+	jq.mu.Unlock()
+
+	// Drain the channel
+	for {
+		select {
+		case <-jq.queue:
+			// drop job
+		default:
+			return
+		}
+	}
 }
 
 // Worker processes tasks from the queue
