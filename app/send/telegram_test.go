@@ -21,7 +21,7 @@ func (m *mockSender) Send(v tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.Se
 	return &tb.Message{Text: "ok"}, nil
 }
 
-func (m *mockSender) SendPaid(v tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions) (*tb.Message, error) {
+func (m *mockSender) SendPaid(v tb.Video, bot *tb.Bot, rcp tb.Recipient, opts *tb.SendOptions, stars int) (*tb.Message, error) {
 	m.VideoSent = &v
 	m.PaidAlbumSent = &tb.PaidAlbum{&v}
 	return &tb.Message{Text: "ok"}, nil
@@ -33,7 +33,7 @@ func TestSend_SuccessVideo(t *testing.T) {
 		Opts:           &Options{Channel: "@channel"},
 		Bot:            &tb.Bot{}, // non-nil, но для video‐send Bot не используется
 		TelegramSender: sender,
-		Formatter:      TelegramFormatter{}, // реальный форматтер (не вызывается при удачной video‐отправке)
+		Formatter:      TelegramFormatter{},
 	}
 
 	file := finder.File{
@@ -48,7 +48,7 @@ func TestSend_SuccessVideo(t *testing.T) {
 		},
 	}
 
-	require.NoError(t, client.Send(file))
+	require.NoError(t, client.Send(file, 1000))
 	require.NotNil(t, sender.VideoSent, "должен был вызваться mockSender.Send")
 	require.Equal(t, 640, sender.VideoSent.Width)
 	require.Equal(t, 7, sender.VideoSent.Duration)
@@ -60,7 +60,7 @@ func TestSend_SkipIfBotNil(t *testing.T) {
 		Opts: &Options{Channel: "@x"},
 		Bot:  nil,
 	}
-	require.NoError(t, client.Send(finder.File{Name: "any"}))
+	require.NoError(t, client.Send(finder.File{Name: "any"}, 1000))
 }
 
 func TestSend_SkipIfChannelEmpty(t *testing.T) {
@@ -69,7 +69,7 @@ func TestSend_SkipIfChannelEmpty(t *testing.T) {
 		Opts: &Options{Channel: ""},
 		Bot:  &tb.Bot{},
 	}
-	require.NoError(t, client.Send(finder.File{Name: "any"}))
+	require.NoError(t, client.Send(finder.File{Name: "any"}, 1000))
 }
 
 func TestOptionsFromEnv(t *testing.T) {

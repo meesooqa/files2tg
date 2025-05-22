@@ -44,14 +44,22 @@ func (s *Server) addJobsChunk() {
 		return
 	}
 	// TODO clear queue
-	for _, file := range files {
+	for i, file := range files {
 		// fmt.Printf("  %s — %s\n", file.Name, file.ModTime.Format(time.RFC3339))
 		// jobId := uuid.New().String()
 		jobId := fmt.Sprintf("%s-%s", file.Name, file.ModTime.Format(time.RFC3339))
+
+		// TODO stars 100
+		stars := 100
+		if i%10 == 0 {
+			stars = 0
+		}
+
 		s.JobQueue.AddJob(job.SendVideoJob{
 			BaseJob:        job.BaseJob{ID: jobId},
 			TelegramClient: s.TelegramClient,
 			File:           file,
+			Stars:          stars,
 		})
 	}
 }
